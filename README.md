@@ -1,5 +1,8 @@
 # Tagging tool
-Fast tagging tool written in Flask
+Fast tagging tool written in Flask.
+
+Right now the only feature is cutting images to square based on 
+selected interest point.
 
 Project based on example from [flask repo.](https://github.com/pallets/flask)
 
