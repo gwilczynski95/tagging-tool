@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block header %}
+<div class="outer_title">
+  <div class="inner_title">
+    <h1>{% block title %}Tagging: {{ value['title'] }}{% endblock %}</h1>
+  </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+{% endblock %}
+
+{% block content %}
+<div class="tagging_container">
+  <div class="center">
+    <img id="image" src="{{ value['curr_img_path'] }}" width="{{ value['x_size'] }}" height="{{ value['y_size'] }}"/>
+  </div>
+</div>
+<script>
+  var current_path = "{{ value['curr_img_path'] }}";
+  var element = document.getElementById("image");
+  var rect = element.getBoundingClientRect();
+  const width = {{ value['x_size'] }};
+  const height = {{ value['y_size'] }};
+
+  window.addEventListener('resize', go);
+
+  function go(){
+    element = document.getElementById("image");
+    rect = element.getBoundingClientRect();
+  }
+
+  function printMousePos(event) {
+    if (((event.clientX >= rect.left) && (event.clientX <= rect.right)) && ((event.clientY >= rect.top) && (event.clientY <= rect.bottom))) {
+      var pos_on_image_x = event.clientX - rect.left;
+      var pos_on_image_y = event.clientY - rect.top;
+
+      pos = {
+          x: pos_on_image_x,
+          y: height - pos_on_image_y  <!-- make it for numpy arrays +-->
+      };
+
+      pos_ratio = {
+          x: pos_on_image_x / width,
+          y: (height - pos_on_image_y) / height
+      };
+
+      $.ajax({
+        type: "POST",
+        url: "/tagging/cut",
+        contentType: "application/json",
+        data: JSON.stringify({location: pos, location_rat: pos_ratio, kind: "portrait", curr_path: current_path}),
+        dataType: "json",
+        success: function(response) {
+            window.location.reload();
+            console.log("here");
+        },
+        error: function(err) {
+            console.log(err);
+            alert("Something is messed up with paths. Rerun app!");
+        }
+      });
+    }
+  }
+
+  document.addEventListener("click", printMousePos);
+</script>
+{% endblock %}
