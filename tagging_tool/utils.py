@@ -2,6 +2,7 @@ import os
 from typing import Tuple
 
 import PIL.Image
+import cv2
 import numpy as np
 from PIL import Image
 
@@ -37,10 +38,16 @@ class ImageLoader:
 def save_image(path: str, data: np.ndarray) -> None:
     image = PIL.Image.fromarray(data)
     image.save(path)
+    print(f'saved: {path}')
 
 
-def load_image(path: str) -> PIL.Image.Image:
-    return Image.open(path)
+def load_image(image_path: str) -> np.ndarray:
+    raw_image = np.array(Image.open(image_path))
+    if len(raw_image.shape) < 3:
+        raw_image = cv2.imread(image_path)
+    elif raw_image.shape[2] != 3:
+        raw_image = np.array(Image.open(image_path).convert("RGB"))
+    return raw_image
 
 
 def rename_to_html_preferred_format(path: str) -> str:
@@ -83,9 +90,9 @@ def fix_point_if_outside_boundary(point: int, min_bound: int, max_bound: int) ->
     return min(max_bound, max(min_bound, point))
 
 
-def rescale_dims(image: PIL.Image.Image, max_x: int, max_y: int) -> Tuple[int, int]:
-    rescaled_x = image.size[0]
-    rescaled_y = image.size[1]
+def rescale_dims(image: np.ndarray, max_x: int, max_y: int) -> Tuple[int, int]:
+    rescaled_x = image.shape[1]
+    rescaled_y = image.shape[0]
 
     if rescaled_x > max_x:
         scale_factor = max_x / rescaled_x
@@ -98,7 +105,7 @@ def rescale_dims(image: PIL.Image.Image, max_x: int, max_y: int) -> Tuple[int, i
     return rescaled_x, rescaled_y
 
 
-def load_image_with_info(loader: ImageLoader) -> Tuple[PIL.Image.Image, str]:
+def load_image_with_info(loader: ImageLoader) -> Tuple[np.ndarray, str]:
     if loader.was_current_image_processed:
         img_path = loader.pick_next()
         image = load_image(img_path)

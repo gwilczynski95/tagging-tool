@@ -60,5 +60,6 @@ def perform_cutting():
     current_filename = portrait_loader[portrait_loader.current_pos - 1].split('/')[-1]
     temp_path = os.path.join(main_save_path, current_filename)
     utils.save_image(temp_path, cut_image)
+    os.remove(portrait_loader[portrait_loader.current_pos - 1])
 
     return jsonify(success=True), 200
