@@ -6,12 +6,14 @@ selected interest point.
 
 Project based on example from [flask repo.](https://github.com/pallets/flask)
 
+#### Caution
+
+Remember to put images into `static` folder. Otherwise, HTML script
+won't be able to load the data.
+
 
 ### Installation
 
-**Be sure to use the same version of the code as the version of the docs
-you're reading.** You probably want the latest tagged version, but the
-default Git version is the main branch.
 ```bash
 git clone https://github.com/gwilczynski95/tagging-tool
 cd tagging-tool
