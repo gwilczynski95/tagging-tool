@@ -9,7 +9,8 @@ Project based on example from [flask repo.](https://github.com/pallets/flask)
 #### Caution
 
 Remember to put images into `static` folder. Otherwise, HTML script
-won't be able to load the data.
+won't be able to load the data. Don't forget to specify directory
+with input data in `tagging.py` as well as output directory.
 
 
 ### Installation
