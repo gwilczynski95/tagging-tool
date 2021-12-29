@@ -112,6 +112,9 @@ def load_image_with_info(loader: ImageLoader) -> Tuple[np.ndarray, str]:
         refactored_path = rename_to_html_preferred_format(img_path)
         loader.cache_current_image(image, refactored_path)
         loader.was_current_image_processed = False
+        if image is None:
+            loader.was_current_image_processed = True
+            return load_image_with_info(loader)
     else:
         image = loader.current_image
         refactored_path = loader.current_renamed_path
